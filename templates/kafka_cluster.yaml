@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: kafka-persistent-cluster 
+  annotations:
+    description: "Deploys a persistent Kafka cluster using the Strimzi Operator"
+objects:
+- apiVersion: kafka.strimzi.io/v1alpha1
+  kind: Kafka
+  metadata:
+    name: ${NAME}
+  spec:
+    kafka:
+      replicas: ${{KAFKA_REPLICAS}}
+      listeners:
+        plain: {}
+        tls: {}
+      config:
+        offsets.topic.replication.factor: ${{TOPIC_REPLICATION_FACTOR}}
+        transaction.state.log.replication.factor: ${{LOG_REPLICATION_FACTOR}}
+        transaction.state.log.min.isr: ${{LOG_MINIMUM_ISR}}
+      storage:
+        type: persistent-claim
+        size: ${{KAFKA_VOLUME_SIZE}}
+        deleteClaim: ${{DELETE_VOLUME_CLAIMS}}
+    zookeeper:
+      replicas: ${{ZOOKEEPER_REPLICAS}}
+      storage:
+        type: persistent-claim
+        size: ${{ZOOKEEPER_VOLUME_SIZE}}
+        deleteClaim: ${{DELETE_VOLUME_CLAIMS}}
+    entityOperator:
+      topicOperator: {}
+      userOperator: {}
+parameters:
+- description: Name for the Kafka cluster
+  name: NAME
+- description: Number of Kafka replicas
+  name: KAFKA_REPLICAS
+  value: "3"
+- description: Number of Zookeeper replicas
+  name: ZOOKEEPER_REPLICAS
+  value: "3"
+- description: Kafka topic replication factor
+  name: TOPIC_REPLICATION_FACTOR
+  value: "3"
+- description: Transaction log replication factor
+  name: LOG_REPLICATION_FACTOR
+  value: "3"
+- description: Transaction log minimum ISR
+  name: LOG_MINIMUM_ISR
+  value: "2"
+- description: Persistent volume claim size for Kafka
+  name: KAFKA_VOLUME_SIZE
+  value: 1Gi
+- description: Persistent volume claim size for Zookeeper
+  name: ZOOKEEPER_VOLUME_SIZE
+  value: 1Gi
+- description: Whether or not to delete persistent volume claims when the cluster is undeployed
+  name: DELETE_VOLUME_CLAIMS
+  value: "true"

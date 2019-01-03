@@ -1,0 +1,19 @@
+---
+ansible_connection: local
+
+openshift_cluster_content:
+- object: strimzi_operator
+  content:
+  - name: "strimzi_operator"
+    template: "templates/strimzi_operator.yaml"
+    params_from_vars: 
+      NAMESPACE: "{{ namespace }}"
+    namespace: "{{ namespace }}"
+    tags:
+    - strimzi-operator
+  - name: "kafka_cluster"
+    template: "templates/kafka_cluster.yaml"
+    params: "params/kafka_cluster"
+    namespace: "{{ namespace }}"
+    tags:
+    - kafka-cluster

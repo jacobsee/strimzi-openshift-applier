@@ -1,0 +1,8 @@
+---
+- name: Deploy Strimzi Operator and Kafka Cluster
+  hosts: "strimzi"
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier
+      tags:
+        - openshift-applier
