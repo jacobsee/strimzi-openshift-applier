@@ -1,4 +1,4 @@
-# OpenShift Applier for the Strimzi Operator + a Kafka Cluster
+# OpenShift Applier for the Strimzi Operator v0.9.0 + a Kafka Cluster
 
 This is an OpenShift applier inventory.
 
